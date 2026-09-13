@@ -46,7 +46,7 @@ async function animate(events){const soundKinds=new Set();for(const ev of events
   if(['summon','rune','spell','power','attack','awaken','shatter','death','heal','shield'].includes(ev.type)&&!soundKinds.has(ev.type)){sound.play(ev.type,ev.element||duel.sides[target?.side||0].element,ev.card?.cost>=8);soundKinds.add(ev.type)}
   switch(ev.type){case 'summon':burst(pos,color,ev.card.cost>=8?22:13);{const el=findTargetElement(target)?.querySelector('.standing');if(el&&!reduced)el.animate([{opacity:0,transform:'translateY(22px) scale(.45)',filter:'brightness(2)'},{opacity:1,transform:'translateY(0) scale(1)',filter:'brightness(1)'}],{duration:420,easing:'cubic-bezier(.12,.8,.3,1.3)'})}break;
   case 'attack':{const source=locationOf(ev.source);bolt(source,pos,color);particle('slash',pos,color);const el=findTargetElement(ev.source);if(el&&source&&pos&&!reduced)el.animate([{transform:'translate(0,0)'},{transform:`translate(${(pos.x-source.x)*.25}px,${(pos.y-source.y)*.25}px) scale(1.12)`,offset:.35},{transform:'translate(0,0)'}],{duration:300,easing:'ease-out'});break}
-  case 'spell':case 'power':bolt(locationOf(null),pos||locationOf(duel.core(1)),color);burst(pos||locationOf(duel.core(1)),color);break;
+  case 'spell':case 'power':bolt(locationOf(duel.core(ev.side??0)),pos||locationOf(duel.core(1)),color);burst(pos||locationOf(duel.core(1)),color);break;
   case 'rune':burst(locationOf({...target,kind:'crystal'}),runeColors[duel.sides[target.side].runes[target.lane]?.effect]||color,20);break;
   case 'damage':if(ev.amount)particle('number',pos,'#ffe3cf',{text:'−'+ev.amount});else if(ev.blocked)particle('number',pos,'#b5eafb',{text:'Barrera'});break;
   case 'heal':particle('number',pos,'#b6efc3',{text:'+'+ev.amount});break;
