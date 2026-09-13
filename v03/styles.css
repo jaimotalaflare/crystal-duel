@@ -14,3 +14,5 @@
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}.fx-layer{display:none}}
 
 @media(max-height:620px){.opponent-bar{height:40px}.enemy-hand{height:18px}.player-bar{height:40px}.context-bar{height:32px}.hand{height:106px}.hand-card{height:96px}.hand .card-illustration{height:38px}.battle-controls{height:38px}.arena{padding:4px 10px}.unit-pair{height:52px}.slot{height:49px}.rune-button{height:22px}.crystal-button{height:40px}.crystal-button .prism{height:46px;top:-8px}.bridge-line{height:18px}.standing{inset:-5px -3px 6px}}
+
+.hand{scrollbar-width:none}.hand::-webkit-scrollbar{display:none}@media(max-height:620px){.hand{padding:4px 10px 3px}}@media(min-height:681px) and (max-height:760px){.mage-stage{height:34dvh}.brand{height:74px}.mage-choice,.mage-choice .portrait{height:69px}.choose-label{margin-top:17px}}

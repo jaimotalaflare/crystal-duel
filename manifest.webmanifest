@@ -1,15 +1,15 @@
 {
   "id": "./",
-  "name": "Crystal Duel — Tres Cristales",
+  "name": "Crystal Duel — Santuario del Umbral",
   "short_name": "Crystal Duel",
-  "description": "Duelo de cartas con cinco magos, tres cristales y runas. Juega contra la IA.",
+  "description": "Cinco magos, 95 cartas elementales y un santuario de tres cristales.",
   "lang": "es",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait-primary",
-  "background_color": "#080e22",
-  "theme_color": "#080e22",
+  "background_color": "#111b1e",
+  "theme_color": "#111b1e",
   "icons": [
     {
       "src": "./icon-192.png",
