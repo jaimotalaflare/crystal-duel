@@ -1,4 +1,4 @@
-import {MAGES,CATALOG,NEUTRALS,CARD_BY_ID,deckList} from './cards.js';
+import {MAGES,CATALOG,NEUTRALS,CARD_BY_ID,deckList} from './cards.js?v=0401';
 export const SAVE_KEY='crystal-duel-campaign-v1';
 export const BOSSES=[{at:300,element:'water',name:'Neris · La puerta de las mareas',unlock:'water'},{at:600,element:'wind',name:'Aeral · La aguja del viento',unlock:'wind'},{at:900,element:'light',name:'Solenne · El juramento del alba',unlock:'light'},{at:1200,element:'dark',name:'Morvane · El último sello',unlock:'dark'},{at:2500,element:'fire',name:'Pyra · La prueba del volcán'},{at:5000,element:'water',name:'Neris · El océano estelar'},{at:7500,element:'light',name:'Solenne · El sol eterno'},{at:10000,element:'dark',name:'Morvane · La corona del Umbral'}];
 export const MILESTONES=[...Array.from({length:8},(_,i)=>(i+1)*150),1500,2000,2500,3000,3500,4000,4500,5000,5500,6000,6500,7000,7500,8000,8500,9000,9500,10000].map((at,i)=>({at,coins:100+(i>7?100:0),gems:10,card:NEUTRALS[i%NEUTRALS.length].id,count:2}));
