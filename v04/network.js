@@ -1,4 +1,4 @@
-import {MAGES,CARD_BY_ID} from './cards.js?v=0401';
+import {MAGES,CARD_BY_ID} from './cards.js?v=0402';
 export function validRemoteDeck(element,ids){if(!MAGES[element]||!Array.isArray(ids)||ids.length!==15)return false;const counts={};return ids.every(id=>{const c=CARD_BY_ID[id];return c&&[element,'neutral'].includes(c.element)&&(counts[id]=(counts[id]||0)+1)<=2})}
 export function validAction(a){if(!a||!['card','attack','move','power','end','surrender'].includes(a.type))return false;if(a.type==='card'&&(!Number.isInteger(a.index)||a.index<0||a.index>9))return false;if(['attack','move'].includes(a.type)&&(!Number.isInteger(a.lane)||a.lane<0||a.lane>2||!Number.isInteger(a.slot)||a.slot<0||a.slot>1))return false;const t=a.target;if(t&&(![0,1].includes(t.side)||!['unit','crystal','rune'].includes(t.kind)||!Number.isInteger(t.lane)||t.lane<0||t.lane>2||![0,1,undefined].includes(t.slot)))return false;return true}
 export const flipTarget=t=>t?{...t,side:1-t.side}:t;

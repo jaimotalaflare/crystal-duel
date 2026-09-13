@@ -1,10 +1,10 @@
-import {MAGES,ELEMENTS,CATALOG,CARD_BY_ID,KEYWORDS,RULES,VERSION,deckList,curve} from './cards.js?v=0401';
-import {Duel,targetKey} from './engine.js?v=0401';
-import {icon,portrait,figure,prism,runestone,runeColors,cardMarkup,kindNames} from './art.js?v=0401';
-import {Sound} from './audio.js?v=0401';
-import {initLobby} from './lobby.js?v=0401';
-import {loadProfile,saveProfile,validDeck,settle,opponent} from './progress.js?v=0401';
-import {PrivateLink,validAction,validView,guestView,flipTarget} from './network.js?v=0401';
+import {MAGES,ELEMENTS,CATALOG,CARD_BY_ID,KEYWORDS,RULES,VERSION,deckList,curve} from './cards.js?v=0402';
+import {Duel,targetKey} from './engine.js?v=0402';
+import {icon,portrait,figure,prism,runestone,runeColors,cardMarkup,kindNames} from './art.js?v=0402';
+import {Sound} from './audio.js?v=0402';
+import {initLobby} from './lobby.js?v=0402';
+import {loadProfile,saveProfile,validDeck,settle,opponent} from './progress.js?v=0402';
+import {PrivateLink,validAction,validView,guestView,flipTarget} from './network.js?v=0402';
 const $=id=>document.getElementById(id),duel=new Duel(),sound=new Sound();
 let chosen='fire',selection=null,busy=false,match=0,toastTimer,announceTimer,installPrompt=null,collectionMode=false;
 const profile=loadProfile(localStorage);let saveFailed=false,encounter=null,networkMatch=false,revision=0,remotePlayer=null,tutorialStep=-1,suppressClickUntil=0;
@@ -96,5 +96,5 @@ const link=new PrivateLink({profile,status:text=>{const el=$('connectionStatus')
 function beginPrivate(p){remotePlayer=p;networkMatch=true;revision=0;match++;selection=null;lifted=false;tutorialStep=-1;chosen=profile.selected;encounter={id:'private',practice:true,name:p.name||'Rival',label:'Duelo privado'};duel.start(chosen,8,{foe:p.element,playerDeck:profile.decks[chosen].map(id=>CARD_BY_ID[id]),enemyDeck:p.deck.map(id=>CARD_BY_ID[id])});busy=false;closeModal();$('menu').classList.add('hidden');$('game').classList.remove('hidden');render();sendState(duel.drainEvents());announce('Duelo privado',encounter.name)}
 function sendState(events){revision++;link.send({type:'state',revision,state:guestView(duel,events)})}
 async function receivePrivate(d){if(!networkMatch)return;if(d.type==='emote'&&Number.isInteger(d.index)&&EMOTES[d.index]){if(Date.now()-lastEmote>1800){lastEmote=Date.now();say(EMOTES[d.index],true)}return}if(d.type==='action'&&link.host){if(busy||!validAction(d.action)||d.revision!==revision||duel.over||duel.active!==1&&d.action.type!=='surrender'){sendState([]);return}const a={...d.action,target:flipTarget(d.action.target)};busy=true;if(!applyAction(1,a)){busy=false;sendState([]);return}const ev=duel.drainEvents(),token=match;render();await animate(ev);if(token!==match)return;busy=false;sendState(ev);if(duel.over)showResult();else render();return}if(d.type==='state'&&!link.host&&Number.isInteger(d.revision)&&d.revision>revision&&validView(d.state)){revision=d.revision;const v=d.state;duel.sides=v.sides;duel.active=v.active;duel.round=v.round;duel.over=!!v.over;duel.winner=v.winner;duel.log=Array.isArray(v.log)?v.log.slice(0,60):[];selection=null;lifted=false;tutorialStep=-1;$('menu').classList.add('hidden');$('game').classList.remove('hidden');busy=true;render();await animate(Array.isArray(v.events)?v.events:[]);busy=false;if(duel.over)showResult();else render()}}
-import('./friends.js?v=0401').then(m=>m.initFriends({profile,link,open:openModal,close:closeModal,save,notify:toast,lobby}));
+import('./friends.js?v=0402').then(m=>m.initFriends({profile,link,open:openModal,close:closeModal,save,notify:toast,lobby}));
 save();updateSound();
