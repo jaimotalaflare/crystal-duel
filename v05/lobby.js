@@ -1,6 +1,6 @@
-import {MAGES,ELEMENTS,CATALOG,NEUTRALS,CARD_BY_ID,ALL_CARDS,KEYWORDS,RULES,deckList} from './cards.js?v=0500';
-import {portrait,prism,icon,cardMarkup,kindNames} from './art.js?v=0500';
-import {BOSSES,MILESTONES,OFFERS,nextBoss,claim,purchase,changeDeck,validDeck} from './progress.js?v=0500';
+import {MAGES,ELEMENTS,CATALOG,NEUTRALS,CARD_BY_ID,ALL_CARDS,KEYWORDS,RULES,deckList} from './cards.js?v=0501';
+import {portrait,prism,icon,cardMarkup,kindNames} from './art.js?v=0501';
+import {BOSSES,MILESTONES,OFFERS,nextBoss,claim,purchase,changeDeck,validDeck} from './progress.js?v=0501';
 const $=id=>document.getElementById(id),esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 export function badge(type){const p={trophy:'M6 3h12v7c0 5-12 5-12 0ZM6 5H2v3c0 4 4 5 5 3m11-6h4v3c0 4-4 5-5 3M12 14v6m-5 1h10',coins:'M21 7c0 3-18 3-18 0s18-3 18 0Zm-18 0v10c0 4 18 4 18 0V7M3 12c0 4 18 4 18 0',gem:'M6 3h12l5 7-11 12L1 10Zm-5 7h22M6 3l6 19 6-19',shop:'M3 10h18v12H3Zm0-8h18l2 8H1ZM8 22v-8h8v8',cards:'m6 5 13-3 4 18-13 3Zm-3 0H1v17h7',cog:'m9 2 6 0 1 4 4 1 2 5-3 3 0 4-5 3-3-3-4 0-4-5 3-3 0-4Zm3 6a4 4 0 1 0 0 8 4 4 0 0 0 0-8Z',crown:'M3 7l5 4 4-8 4 8 5-4-2 13H5Z',lock:'M6 11V7a6 6 0 0 1 12 0v4M4 11h16v12H4Zm8 4v4',back:'m15 4-8 8 8 8',news:'M3 3h18v19H3Zm4 4h10M7 11h10M7 15h4m-4 4h10'};return `<svg class="ui-icon ui-${type}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true"><path d="${p[type]||p.trophy}"/></svg>`}
 export function chest(color='#e2ae52'){return `<div class="chest" style="--chest:${color}"><span class="chest-light"></span><span class="chest-lid"></span><span class="chest-box"></span><span class="chest-lock">${icon('rune')}</span></div>`}

@@ -14,4 +14,6 @@ npm test: 108 cartas, mazos, migración, ataques, agotamiento, bloqueo doble, Le
 ## Multijugador experimental
 PeerJS y WebRTC por ID o códigos. Compatible solo con clientes v0.5 por las nuevas reglas y el tamaño de mazo. Sin recompensas de campaña, cuentas autenticadas, TURN propio ni reconexión. No ha sido posible verificar la conexión real desde el navegador de revisión; la señalización sí responde. Una IP sola no conecta dos navegadores web. Licencia MIT de PeerJS incluida.
 
-Estado: revisión visual de v0.5 en curso.
+Comprobado en navegador: ataque por arrastre, traslado con coste y agotamiento, bloqueo tras perder un lateral y exposición tras perder ambos. Mano visible en tamaños de 390 × 720 y 320 × 568. Ajustado el margen superior de cristales para pantallas bajas.
+
+Verificada la recepción del Legado con once cartas en mano, su menú de tres opciones, la previsualización de maná y el lanzamiento de Cataclismo durante una partida contra la IA.
