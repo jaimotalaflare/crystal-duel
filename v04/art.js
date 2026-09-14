@@ -1,4 +1,4 @@
-import {ELEMENTS as MAGES} from './cards.js?v=0402';
+import {ELEMENTS as MAGES} from './cards.js?v=0403';
 const paths={
  fire:'M12 2C7 8 18 8 12 14c-2-2-4-3-5-6-5 5-4 13 5 14 9-1 10-10 5-15 1 6-4 6-5-5Z',
  water:'M12 2C9 7 4 11 4 15a8 8 0 0 0 16 0c0-4-5-8-8-13ZM8 15c0 3 2 4 4 4',

@@ -1,15 +1,15 @@
 {
   "id": "./",
-  "name": "Crystal Duel — Santuario del Umbral",
+  "name": "Crystal Duel — Camino del Santuario",
   "short_name": "Crystal Duel",
-  "description": "Cinco magos, 95 cartas elementales y un santuario de tres cristales.",
+  "description": "Campaña de trofeos, cuatro pantallas y duelos privados entre magos.",
   "lang": "es",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait-primary",
-  "background_color": "#111b1e",
-  "theme_color": "#111b1e",
+  "background_color": "#244b73",
+  "theme_color": "#244b73",
   "icons": [
     {
       "src": "./icon-192.png",

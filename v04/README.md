@@ -16,6 +16,8 @@ La opción de códigos intercambia offer/answer WebRTC directamente, con candida
 El anfitrión sigue siendo un participante de confianza en este prototipo amistoso. Los IDs no son cuentas autenticadas. No hay cámara, micrófono ni chat libre. Las frases rápidas usan la voz de síntesis disponible en el dispositivo; no son grabaciones propias de personajes.
 
 ## Validación
-`node tests.mjs`: mazos/balance, movimientos y agotamiento, sinergias, 108 cartas, campaña/jefes, recompensas, edición, persistencia, validación de comandos y ocultamiento del rival, y partidas completas.
+`node tests.mjs` y `node tests-network.mjs`: mazos/balance, movimientos y agotamiento, sinergias, 108 cartas, campaña/jefes, recompensas, edición, persistencia, validación de comandos y ocultamiento del rival, y partidas completas.
 
 Fuentes técnicas: https://peerjs.com/client/getting-started y la API estándar RTCPeerConnection.
+
+La revisión visual cubrió una pantalla de 320 × 568 y controles de invocación, ataque y arrastre de poder. El transporte del protocolo se comprobó con conexiones simuladas. La señalización pública respondió, pero el navegador de revisión no produjo candidatos ICE: no fue posible completar una conexión WebRTC real entre dos jugadores. El multijugador se ofrece como experimental y requiere validación en celulares.

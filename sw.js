@@ -1,7 +1,7 @@
 'use strict';
 const PREFIX='crystal-duel:'+self.registration.scope;
-const CACHE=PREFIX+'v0.3.0';
-const FILES=["./", "./index.html", "./manifest.webmanifest", "./icon-192.png", "./icon-512.png", "./v03/styles.css?v=0.3.2", "./v03/game.js", "./v03/cards.js", "./v03/art.js", "./v03/engine.js", "./v03/audio.js", "./v03/assets/arena.webp", "./v03/assets/mages.webp", "./v03/assets/creatures.webp"];
+const CACHE=PREFIX+'v0.4.0';
+const FILES=["./", "./index.html", "./manifest.webmanifest", "./icon-192.png", "./icon-512.png", "./v04/styles.css?v=0403", "./v04/lobby.css?v=0403", "./v04/controls.css?v=0403", "./v04/game.js?v=0403", "./v04/cards.js?v=0403", "./v04/engine.js?v=0403", "./v04/art.js?v=0403", "./v04/audio.js?v=0403", "./v04/progress.js?v=0403", "./v04/lobby.js?v=0403", "./v04/friends.js?v=0403", "./v04/network.js?v=0403", "./v04/peerjs.min.js", "./v03/assets/mages.webp", "./v03/assets/creatures.webp", "./v03/assets/arena.webp"];
 self.addEventListener('install',event=>event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(FILES)).then(()=>self.skipWaiting())));
 self.addEventListener('activate',event=>event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k.startsWith(PREFIX)&&k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));
 self.addEventListener('fetch',event=>{

@@ -1,4 +1,4 @@
-import {MAGES,CATALOG,deckList} from './cards.js?v=0402';
+import {MAGES,CATALOG,deckList} from './cards.js?v=0403';
 const copy=o=>JSON.parse(JSON.stringify(o));
 export const targetKey=t=>`${t.side}-${t.kind}-${t.lane}-${t.slot||0}`;
 export class Duel{
