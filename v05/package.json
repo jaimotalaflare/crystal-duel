@@ -1,0 +1,1 @@
+{"name": "crystal-duel-v05", "private": true, "type": "module", "scripts": {"test": "node tests.mjs && node tests-crystals.mjs && node tests-network.mjs"}}
