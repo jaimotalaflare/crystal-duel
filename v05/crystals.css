@@ -21,3 +21,6 @@
 @media(max-height:680px){.player-board{padding-bottom:18px}.enemy-board{padding-top:38px}.crystal-button .prism{width:57px;height:66px;top:-15px}.crystal-button.core .prism{width:65px;height:75px;top:-21px}.player-board .crystal-button.core{transform:translateY(16px)}.enemy-board .crystal-button.core{transform:translateY(-16px)}.core-barrier{width:60px;top:-13px}.core-state{top:-17px;font-size:5.5px}.crystal-hp{font-size:9px}.crystal-label{bottom:15px}}
 @media(max-height:620px){.player-board{padding-bottom:15px}.enemy-board{padding-top:32px}.crystal-button .prism{height:55px;width:49px;top:-12px}.crystal-button.core .prism{height:64px;width:58px;top:-19px}.player-board .crystal-button.core{transform:translateY(13px)}.enemy-board .crystal-button.core{transform:translateY(-13px)}.core-state{top:-16px}.core-barrier{top:-12px;bottom:9px;width:55px}.crystal-label{font-size:5px}.crystal-hp{font-size:9px;padding:1px 6px}}
 @media(prefers-reduced-motion:reduce){.prism .gem-body,.prism .gem-core,.prism .gem-orbit,.core-barrier,.energy-stream,.attack-aim path{animation:none}.energy-link circle{display:none}}
+
+/* Keep both crystal health rows above the hand on short phone screens. */
+@media(max-height:620px){.lane{padding:0}.unit-pair{height:46px;margin:0}.slot{height:44px}.rune-button{margin:0}.bridge-line{height:16px;margin:0 0 2px}}
