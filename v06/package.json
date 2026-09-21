@@ -1,0 +1,8 @@
+{
+  "name": "wild-wizards",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node tests.mjs && node tests-crystals.mjs && node tests-network.mjs && node tests-wild.mjs"
+  }
+}

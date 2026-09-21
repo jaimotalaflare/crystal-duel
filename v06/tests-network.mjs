@@ -1,0 +1,21 @@
+import assert from 'node:assert/strict';
+import {PrivateLink, validAction} from './network.js';
+import {freshProfile} from './progress.js';
+const tick=()=>new Promise(r=>setImmediate(r));
+const received=[];let joined=false,hosted=false,disconnected=false;
+const host=new PrivateLink({profile:freshProfile(),host(){hosted=true},data(d){received.push(d)},disconnected(){disconnected=true}});
+const guest=new PrivateLink({profile:freshProfile(),invite(p,accept){accept()},join(){joined=true},data(d){received.push(d)}});
+function wire(){const events={};return {open:true,on(n,f){events[n]=f},emit(n,d){events[n]?.(d)},send(d){queueMicrotask(()=>this.other.emit('data',JSON.parse(JSON.stringify(d))))},close(){this.open=false;this.emit('close')}}}
+const a=wire(),b=wire();a.other=b;b.other=a;
+host.bind(a,true);guest.bind(b,false);b.emit('open');a.emit('open');await tick();
+assert(hosted&&joined&&host.accepted&&guest.accepted);
+guest.send({type:'action',revision:1,action:{type:'end'}});await tick();assert.equal(received[0].action.type,'end');
+host.send({type:'state',revision:2,state:{active:0}});await tick();assert.equal(received[1].revision,2);
+a.emit('error');assert(disconnected);guest.disconnect();
+assert(!validAction({type:'move',lane:0,slot:0}));
+assert(!validAction({type:'card',index:0,target:{side:0,kind:'unit',lane:0}}));
+assert(validAction({type:'end'}));
+const oldPC=global.RTCPeerConnection;
+global.RTCPeerConnection=class{iceGatheringState='complete';addEventListener(){}createDataChannel(){return {readyState:'connecting',close(){}}}async createOffer(){return {type:'offer',sdp:'v=0\r\n'}}async setLocalDescription(d){this.localDescription=d}close(){}};
+const local=new PrivateLink({profile:freshProfile()});await assert.rejects(()=>local.localCode(),/Este navegador no ofrece/);assert.equal(local.pc,null);assert.equal(local.conn,null);global.RTCPeerConnection=oldPC;
+console.log('PASS: invitation/acceptance and messages over simulated transport; disconnect notification; malformed actions; no-address connection failure. Real-device WebRTC remains unverified.');

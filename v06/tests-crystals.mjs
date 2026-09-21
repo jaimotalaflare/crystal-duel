@@ -1,0 +1,25 @@
+import assert from 'node:assert/strict';
+import {Duel} from './engine.js';
+import {CATALOG,deckList,LEGACY_TOKEN,LEGACY_CHOICES} from './cards.js';
+import {freshProfile,normalize,validDeck,opponent} from './progress.js';
+import {validRemoteDeck,guestView,validView} from './network.js';
+const spot=(side,lane=0,slot=0)=>({side,kind:'unit',lane,slot});const crystal=(side,lane)=>({side,kind:'crystal',lane,slot:0});
+function game(){const d=new Duel(()=>.4);d.start('fire',8,{foe:'water'});return d}
+let d=game();const attacker=d.summon(0,CATALOG.fire[0],spot(0,1),false);attacker.born=0;assert(!d.attackTargets(0,1,0).some(t=>t.kind==='crystal'));assert.equal(d.damage(crystal(1,1),99),0);
+d.crystalDamage(1,0,99);assert(!d.accessible(1,1));assert(!d.powerTargets(0).some(t=>t.kind==='crystal'&&t.lane===1));assert.equal(d.damage(crystal(1,1),99),0);d.crystalDamage(1,2,99);assert(d.accessible(1,1));assert(d.attackTargets(0,1,0).some(t=>t.kind==='crystal'));assert(d.powerTargets(0).some(t=>t.kind==='crystal'&&t.lane===1));assert.equal(d.sides[1].hand.filter(c=>c.fx==='legacy').length,2);d.crystalDamage(1,2,99);assert.equal(d.sides[1].hand.filter(c=>c.fx==='legacy').length,2);
+// Every hand retains its two earned legacies, including a full hand.
+d=game();d.sides[0].hand=Array.from({length:10},()=>({...CATALOG.fire[0]}));d.crystalDamage(0,0,99);d.crystalDamage(0,2,99);assert.equal(d.sides[0].hand.length,12);assert(validView(guestView(d)));assert(d.chooseLegacy(0,11,0));assert.equal(d.sides[0].hand[11].fx,'boardWipe');assert.equal(d.sides[0].mana,1);
+const own=d.summon(0,CATALOG.fire[0],spot(0),false);d.summon(1,CATALOG.water[2],spot(1),false);d.sides[1].runes[0]={...CATALOG.water[5]};const hp=d.sides[1].crystals.map(c=>c.hp);assert(d.play(0,11));assert.equal(d.units(0).length+d.units(1).length,0);assert(d.sides.every(s=>s.runes.every(r=>!r)));assert.deepEqual(d.sides[1].crystals.map(c=>c.hp),hp);assert.equal(d.sides[0].mana,0);
+// Revive only in selected territory; summoned units wait and do not repeat entry damage.
+d=game();d.sides[0].grave=[CATALOG.fire[12],CATALOG.fire[0]];d.sides[0].hand=[LEGACY_CHOICES[1]];assert(d.play(0,0,{side:0,kind:'rune',lane:2,slot:0}));assert.equal(d.sides[0].lanes[2].filter(Boolean).length,2);assert.equal(d.sides[0].grave.length,0);assert.equal(d.sides[1].crystals[2].hp,15);assert(d.units(0).every(t=>!d.ready(0,t.lane,t.u)));
+// Redraw returns rather than discards the remaining hand and draws exactly n+2.
+d=game();d.sides[0].hand=[LEGACY_CHOICES[2],...deckList('fire').slice(0,3)];d.sides[0].deck=deckList('fire').slice(4);const count=d.sides[0].hand.length+d.sides[0].deck.length;assert(d.play(0,0));assert.equal(d.sides[0].hand.length,5);assert.equal(d.sides[0].hand.length+d.sides[0].deck.length,count-1);
+// Direct spells can hit side crystals; protected core remains inaccessible.
+d=game();d.sides[0].mana=10;d.sides[0].hand=[CATALOG.fire[3]];assert(d.play(0,0,crystal(1,0)));assert.equal(d.sides[1].crystals[0].hp,13);assert.equal(d.sides[0].hand.length,1);assert(!d.targets(0,CATALOG.fire[1]).some(t=>t.kind==='crystal'&&t.lane===1));
+// Overflow takes barrier into account and does not bypass the dual bond.
+d=game();d.sides[0].mana=10;d.sides[0].hand=[CATALOG.fire[7]];const defender=d.summon(1,CATALOG.water[0],spot(1),false);defender.shield=1;assert(d.play(0,0,spot(1)));assert.equal(d.sides[1].crystals[0].hp,13);d.sides[0].hand=[CATALOG.fire[7]];d.summon(1,CATALOG.water[0],spot(1,1),false);assert(d.play(0,0,spot(1,1)));assert.equal(d.sides[1].crystals[1].hp,30);
+// Embate prioritizes a minion, then an exposed crystal; not the protected core.
+d=game();d.summon(0,CATALOG.fire[12],spot(0,1));assert.equal(d.sides[1].crystals[1].hp,30);d.summon(0,CATALOG.fire[12],spot(0));assert.equal(d.sides[1].crystals[0].hp,13);d.summon(1,CATALOG.water[6],spot(1,2),false);d.summon(0,CATALOG.fire[12],spot(0,2));assert.equal(d.sides[1].lanes[2][0].damage,2);assert.equal(d.sides[1].crystals[2].hp,15);assert(CATALOG.fire.every(c=>!c.kw?.includes('burnHit')&&!['burn','laneBurn'].includes(c.fx)&&c.effect!=='scorch'));
+// Migration preserves cards and campaign resources. New incomplete decks stay incomplete.
+const old=freshProfile();old.version=1;old.name='Viajero de prueba';old.coins=777;old.trophies=200;old.decks.fire=old.decks.fire.slice(0,15);const migrated=normalize(old);assert(validDeck(migrated));assert.equal(migrated.coins,777);assert.equal(migrated.trophies,200);assert.equal(migrated.name,old.name);for(const id of new Set(old.decks.fire))assert(migrated.decks.fire.filter(x=>x===id).length>=old.decks.fire.filter(x=>x===id).length);migrated.decks.fire.pop();assert.equal(normalize(migrated).decks.fire.length,19);assert(!validRemoteDeck('fire',[...deckList('fire').slice(0,19).map(c=>c.id),LEGACY_TOKEN.id]));for(const random of [()=>.4,Math.random]){const npc=opponent(freshProfile(),{random});assert.equal(npc.deck.length,20);assert(npc.deck.every(c=>npc.deck.filter(x=>x.id===c.id).length<=2))}
+console.log('PASS: dual crystal gate, spells, two legacies with full hand, wipe, revival, redraw, Embate, overflow, 20-card migration and NPC copy limits.');
