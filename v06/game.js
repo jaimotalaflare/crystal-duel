@@ -1,10 +1,10 @@
-import {MAGES,ELEMENTS,CATALOG,CARD_BY_ID,KEYWORDS,RULES,VERSION,deckList,curve,LEGACY_CHOICES} from './cards.js?v=0600';
-import {Duel,targetKey} from './engine.js?v=0600';
-import {icon,portrait,figure,prism,runestone,runeColors,cardMarkup,kindNames} from './art.js?v=0600';
-import {Sound} from './audio.js?v=0600';
-import {initLobby} from './lobby.js?v=0600';
-import {loadProfile,saveProfile,validDeck,settle,opponent} from './progress.js?v=0600';
-import {PrivateLink,validAction,validView,guestView,flipTarget} from './network.js?v=0600';
+import {MAGES,ELEMENTS,CATALOG,CARD_BY_ID,KEYWORDS,RULES,VERSION,deckList,curve,LEGACY_CHOICES} from './cards.js?v=0601';
+import {Duel,targetKey} from './engine.js?v=0601';
+import {icon,portrait,figure,prism,runestone,runeColors,cardMarkup,kindNames} from './art.js?v=0601';
+import {Sound} from './audio.js?v=0601';
+import {initLobby} from './lobby.js?v=0601';
+import {loadProfile,saveProfile,validDeck,settle,opponent} from './progress.js?v=0601';
+import {PrivateLink,validAction,validView,guestView,flipTarget} from './network.js?v=0601';
 const $=id=>document.getElementById(id),duel=new Duel(),sound=new Sound();
 let chosen='fire',selection=null,busy=false,match=0,toastTimer,announceTimer,installPrompt=null,collectionMode=false;
 const profile=loadProfile(localStorage);let saveFailed=false,encounter=null,networkMatch=false,revision=0,remotePlayer=null,tutorialStep=-1,suppressClickUntil=0;
@@ -143,12 +143,13 @@ async function receivePrivate(d){
   $('menu').classList.add('hidden');$('game').classList.remove('hidden');busy=true;render();await animate(Array.isArray(v.events)?v.events:[]);if(token!==match)return;busy=!!v.clockPaused;if(duel.over)showResult();else render();
  }
 }
-import('./friends.js?v=0600').then(m=>m.initFriends({profile,link,open:openModal,close:closeModal,save,notify:toast,lobby}));
+import('./friends.js?v=0601').then(m=>m.initFriends({profile,link,open:openModal,close:closeModal,save,notify:toast,lobby}));
 save();updateSound();
 
 window.addEventListener('resize',()=>{if(!duel.sides.length||$('game').classList.contains('hidden'))return;for(const [p,id] of [[0,'playerBoard'],[1,'enemyBoard']]){$(id).querySelector('.core-links')?.remove();renderLinks(p,id)}});
 
-function layoutFan(){const cards=[...$('hand').querySelectorAll('[data-hand]')],n=cards.length,w=$('hand').clientWidth,cw=w<350?74:84,gap=n>1?Math.min(cw*.65,(w-cw-28)/(n-1)):0;cards.forEach((b,i)=>{const d=i-(n-1)/2,angle=d*Math.min(6,36/Math.max(1,n-1));b.style.setProperty('--fan-x',d*gap+'px');b.style.setProperty('--fan-y',Math.abs(d)*Math.min(4,15/Math.max(1,(n-1)/2))+'px');b.style.setProperty('--fan-angle',angle+'deg');b.style.setProperty('--fan-z',i+1)});}
+function layoutFan(){const cards=[...$('hand').querySelectorAll('[data-hand]')],n=cards.length,w=$('hand').clientWidth,cw=w<350?74:84,h=cards[0]?.offsetHeight||119,step=Math.min(6,36/Math.max(1,n-1)),edge=(n-1)*step/2*Math.PI/180,wing=h*1.25*Math.sin(edge)+cw*.5*(1-Math.cos(edge)),gap=n>1?Math.max(6,Math.min(cw*.65,(w-cw-24-wing*2)/(n-1))):0;cards.forEach((b,i)=>{const d=i-(n-1)/2;b.style.setProperty('--fan-x',d*gap+'px');b.style.setProperty('--fan-y',Math.abs(d)*Math.min(4,15/Math.max(1,(n-1)/2))+'px');b.style.setProperty('--fan-angle',d*step+'deg');b.style.setProperty('--fan-z',i+1)});}
+
 let revealOrigin=null;
 function captureCardOrigin(side,action){if(action.type!=='card')return;const el=side===0?$('hand').querySelector(`[data-hand="${action.index}"]`):$('enemyHand');if(!el)return;const r=el.getBoundingClientRect(),a=$('app').getBoundingClientRect();revealOrigin={x:r.x+r.width/2-a.x,y:r.y+r.height/2-a.y};}
 async function revealCard(ev,token){

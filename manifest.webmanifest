@@ -1,8 +1,8 @@
 {
   "id": "./",
-  "name": "Crystal Duel — Camino del Santuario",
-  "short_name": "Crystal Duel",
-  "description": "Campaña de trofeos, cuatro pantallas y duelos privados entre magos.",
+  "name": "Wild Wizards — Santuario del Umbral",
+  "short_name": "Wild Wizards",
+  "description": "Magos, cristales y cartas: campaña de trofeos y duelos privados.",
   "lang": "es",
   "start_url": "./",
   "scope": "./",

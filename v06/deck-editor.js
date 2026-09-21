@@ -1,6 +1,6 @@
-import {MAGES,ALL_CARDS,CARD_BY_ID} from './cards.js?v=0600';
-import {cardMarkup,portrait} from './art.js?v=0600';
-import {transferCard} from './progress.js?v=0600';
+import {MAGES,ALL_CARDS,CARD_BY_ID} from './cards.js?v=0601';
+import {cardMarkup,portrait} from './art.js?v=0601';
+import {transferCard} from './progress.js?v=0601';
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 export function mountDeckEditor(root,{profile:p,save,notify,sound,inspect,heroes,recommend,changed}){
  const abort=new AbortController(),listen=(el,n,fn)=>el.addEventListener(n,fn,{signal:abort.signal});
