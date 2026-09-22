@@ -42,5 +42,5 @@ function bind(){
 $$('[data-nav]').forEach(b=>b.onclick=()=>{current=b.dataset.nav;render()});
 $('#plus').onclick=()=>sheet('<div class="handle"></div><div class="section"><h3>Agregar</h3><button class="link" id="close">Cerrar</button></div><div class="grid"><button data-add="cuenta">💳<span>Cuenta</span></button><button data-add="compra">🛒<span>Compra</span></button><button data-add="meta">💰<span>Meta</span></button><button data-add="item">🧾<span>Lista</span></button><button data-add="nota">📝<span>Nota</span></button><button data-add="tarea">✅<span>Tarea</span></button><button data-add="evento">📅<span>Evento</span></button><button data-add="album">📸<span>Álbum</span></button></div>');
 $('#bg').onclick=close;$('#profile').onclick=settings;$('#bell').onclick=()=>toast('Tus recordatorios aparecen en Inicio');document.addEventListener('click',e=>{if(e.target.id==='close')close();if(e.target.closest&&e.target.closest('[data-add]')){let b=e.target.closest('[data-add]'); b.dataset.add==='compra'?purchaseForm():form(b.dataset.add)}});
-document.querySelector('#app').style.display='none';cloudBoot();
+document.querySelector('#app').style.display='';render();setTimeout(()=>{cloudBoot().catch(e=>{console.error(e);document.querySelector('#app').style.display='';render();toast('Modo local activo')})},50);
 </script></body></html>
