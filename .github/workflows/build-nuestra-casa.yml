@@ -38,11 +38,11 @@ jobs:
         run: gradle assembleDebug
 
       - name: Rename APK
-        run: cp household-app/app/build/outputs/apk/debug/app-debug.apk HappyHome-v0.10.apk
+        run: cp household-app/app/build/outputs/apk/debug/app-debug.apk HappyHome-v0.10.1.apk
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: HappyHome-v0.10-apk
-          path: HappyHome-v0.10.apk
+          name: HappyHome-v0.10.1-apk
+          path: HappyHome-v0.10.1.apk
           retention-days: 30
