@@ -9,14 +9,17 @@ const id=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6);
 const fresh=()=>({home:{name:'HappyHome',message:'Juntos hacemos un gran hogar.'},members:['Nicolás','Alejandra'],bills:[],purchases:[],savings:[],shopping:[],wishlist:[],inventory:{Refrigerador:[],Despensa:[],Otros:[]},tasks:[],notes:[],events:[],albums:[],chat:[]});
 let s; try{s=JSON.parse(localStorage.getItem('happyhome-v04'))||fresh()}catch(e){s=fresh()}
 let current='inicio', moneyTabName='cuentas', houseTabName='menu', familyTabName='fotos',calView=new Date();
-function save(){localStorage.setItem('happyhome-v04',JSON.stringify(s))}
+function normalizeState(){let base={bills:[],purchases:[],savings:[],shopping:[],tasks:[],notes:[],events:[],wishlist:[],albums:[],chat:[],members:[],inventory:{Refrigerador:[],Despensa:[],Otros:[]}};Object.keys(base).forEach(k=>{if(k==='inventory'){s.inventory=s.inventory||{};['Refrigerador','Despensa','Otros'].forEach(x=>{if(!Array.isArray(s.inventory[x]))s.inventory[x]=[]})}else if(!Array.isArray(s[k]))s[k]=[]});s.home=s.home||{name:'HappyHome',message:'Juntos hacemos un gran hogar.'}}
+normalizeState();
+function save(){try{localStorage.setItem('happyhome-v04',JSON.stringify(s));return true}catch(e){console.error('HappyHome save failed',e);toast('No se pudo guardar');return false}}
 function audit(obj,text){obj.history??=[];obj.history.unshift({who:'Nicolás',at:now(),text})}
 function toast(t){let e=document.createElement('div');e.className='toast';e.textContent=t;document.body.append(e);setTimeout(()=>e.remove(),1600)}
 function sheet(h){$('#sheet').innerHTML=h;$('#sheet').classList.remove('hidden');$('#bg').classList.remove('hidden')}
 function close(){$('#sheet').classList.add('hidden');$('#bg').classList.add('hidden')}
 function hist(x){return (x.history||[]).map(h=>'<div class="activity"><strong>'+h.who+'</strong> · '+h.at+'<br><span class="small">'+h.text+'</span></div>').join('')||'<p class="small">Aún no hay movimientos.</p>'}
 function empty(title,txt,action){return '<div class="card"><strong>'+title+'</strong><p class="small">'+txt+'</p>'+(action||'')+'</div>'}
-function render(){ $$('.nav [data-nav]').forEach(b=>b.classList.toggle('active',b.dataset.nav===current)); ({inicio:home,dinero:moneyScreen,casa:house,familia:family}[current])(); bind() }
+function dataCounts(){return {cuentas:s.bills.length,compras:s.purchases.length,refrigerador:s.inventory.Refrigerador.length,despensa:s.inventory.Despensa.length,notas:s.notes.length,tareas:s.tasks.length,eventos:s.events.length}}
+function render(){normalizeState(); $$('.nav [data-nav]').forEach(b=>b.classList.toggle('active',b.dataset.nav===current)); ({inicio:home,dinero:moneyScreen,casa:house,familia:family}[current])(); bind() }
 function home(){
  $('#title').textContent=s.home.name;
  const due=s.bills.filter(b=>b.status!=='Pagada').slice(0,3), tasks=s.tasks.filter(t=>!t.done).slice(0,3);
@@ -123,7 +126,6 @@ function wishDetail(w){sheet('<div class="handle"></div><div class="section"><h3
 function editPopup(title,fields,done){sheet('<div class="handle"></div><div class="section"><h3>'+title+'</h3><button class="link" id="close">Cerrar</button></div><div class="form">'+fields.map((f,i)=>'<div class="field"><label>'+f[0]+'</label><input class="editv" value="'+String(f[1]??'').replace(/"/g,'&quot;')+'"></div>').join('')+'<button class="primary" id="editsave">Guardar cambios</button></div>');$('#close').onclick=close;$('#editsave').onclick=()=>{done($('.editv').map(x=>x.value));save();close();render();toast('Cambios guardados')}}
 function settings(){sheet('<div class="handle"></div><div class="section"><h3>Ajustes</h3><button class="link" id="close">Cerrar</button></div><div class="card"><strong>🗑️ Vaciar HappyHome</strong><p class="small">Borra todos los datos locales y vuelve a cero.</p><button class="secondary danger" id="reset">Eliminar todos los datos</button></div>');$('#close').onclick=close;$('#reset').onclick=()=>{if(confirm('¿Eliminar TODOS los datos?')){s=fresh();save();close();render()}}}
 function bind(){
-
  $('[data-add]').forEach(b=>b.onclick=()=>b.dataset.add==='compra'?purchaseForm():b.dataset.add==='nota'?noteForm():form(b.dataset.add));
  $$('[data-homeedit]').forEach(b=>b.onclick=homeEdit);
  $$('[data-saving]').forEach(b=>b.onclick=()=>savingDetail(s.savings.find(x=>x.id===b.dataset.saving)));
@@ -140,7 +142,7 @@ function bind(){
  if($('#send'))$('#send').onclick=()=>{let v=$('#msg').value.trim();if(v){s.chat.push({who:'Nicolás',text:v,at:now()});save();family()}};
 }
 $$('[data-nav]').forEach(b=>b.onclick=()=>{current=b.dataset.nav;render()});
-$('#plus').onclick=()=>sheet('<div class="handle"></div><div class="section"><h3>Agregar</h3><button class="link" id="close">Cerrar</button></div><div class="grid"><button data-add="cuenta">💳<span>Cuenta</span></button><button data-add="compra">🛒<span>Compra</span></button><button data-add="meta">💰<span>Meta</span></button><button data-add="item">🧾<span>Lista</span></button><button data-add="nota">📝<span>Nota</span></button><button data-add="tarea">✅<span>Tarea</span></button><button data-add="evento">📅<span>Evento</span></button><button data-add="album">📸<span>Álbum</span></button></div>');
-$('#bg').onclick=close;$('#profile').onclick=settings;$('#bell').onclick=()=>toast('Tus recordatorios aparecen en Inicio');document.addEventListener('click',e=>{if(e.target.id==='close')close();if(e.target.closest&&e.target.closest('[data-add]')){let b=e.target.closest('[data-add]'); b.dataset.add==='compra'?purchaseForm():b.dataset.add==='nota'?noteForm():form(b.dataset.add)}});
+$('#plus').onclick=()=>{sheet('<div class="handle"></div><div class="section"><h3>Agregar</h3><button class="link" id="close">Cerrar</button></div><div class="grid"><button data-add="cuenta">💳<span>Cuenta</span></button><button data-add="compra">🛒<span>Compra</span></button><button data-add="meta">💰<span>Meta</span></button><button data-add="item">🧾<span>Lista</span></button><button data-add="nota">📝<span>Nota</span></button><button data-add="tarea">✅<span>Tarea</span></button><button data-add="evento">📅<span>Evento</span></button><button data-add="album">📸<span>Álbum</span></button></div>');bind()};
+$('#bg').onclick=close;$('#profile').onclick=settings;$('#bell').onclick=()=>toast('Tus recordatorios aparecen en Inicio');document.addEventListener('click',e=>{if(e.target.id==='close')close()});
 render();
 </script></body></html>
